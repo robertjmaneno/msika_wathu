@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:msika_wathu/views/buyer/auth/register_screen.dart';
 import 'package:msika_wathu/views/buyer/main_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -67,6 +68,9 @@ class LoginScreen extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               // Register button logic
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterScreen()));
                             },
                             child: const Text(
                               "Register",
