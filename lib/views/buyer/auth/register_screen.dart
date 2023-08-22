@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msika_wathu/controllers/auth_controller.dart';
-import 'package:msika_wathu/login.dart';
+import 'package:msika_wathu/views/buyer/auth/loging_screan.dart'; // Import the BLoginScrean
+
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -318,7 +319,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const LoginScreen();
+                          return const BLoginScrean(); // Navigate to BLoginScrean
                         }));
                       },
                       child: const Row(
@@ -328,6 +329,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ],
                       ),
                     ),
+
                   ],
                 )
               ],
