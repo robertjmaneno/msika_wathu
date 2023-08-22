@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:msika_wathu/views/buyer/auth/register_screen.dart';
+import 'package:msika_wathu/views/buyer/main_screen.dart';
 
 class BLoginScrean extends StatefulWidget {
   const BLoginScrean({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
       if (user != null) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return YourNextScreen();
+          return MainScreen();
         }));
       } else {
         // Handle authentication failure if needed.
@@ -231,21 +232,6 @@ class _BLoginScreanState extends State<BLoginScrean> {
       r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
     );
     return emailRegExp.hasMatch(email);
-  }
-}
-
-class YourNextScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Next Screen Title'),
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-        child: const Text('Welcome to the next screen!'),
-      ),
-    );
   }
 }
 
