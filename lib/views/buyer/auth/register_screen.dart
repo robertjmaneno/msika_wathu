@@ -2,25 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:msika_wathu/controllers/auth_controller.dart';
 import 'package:msika_wathu/login.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Your App Title',
-      theme: ThemeData(
-        primarySwatch: Colors.green, // Change primary color to green
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: RegisterScreen(),
-    );
-  }
-}
-
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -106,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your App Title'), // Set your app title here
+        title: const Text('Your App Title'), // Set your app title here
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -115,18 +99,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 CircleAvatar(
                   radius: 64,
                   backgroundColor: Colors.green.shade900,
-                  child: Icon(
+                  child: const Icon(
                     Icons.person,
                     size: 64,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   "Create Customer's Account",
                   style: TextStyle(fontSize: 20),
                 ),
@@ -136,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onChanged: (value) {
                       fullName = value;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Full Name',
                       border: OutlineInputBorder(),
                     ),
@@ -159,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         flex: 2,
                         child: _CountrySelect(),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         flex: 3,
                         child: TextFormField(
@@ -167,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             phoneNumber = value;
                           },
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Phone Number',
                             border: OutlineInputBorder(),
                           ),
@@ -194,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onChanged: (value) {
                       email = value;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Email',
                       border: OutlineInputBorder(),
                     ),
@@ -228,7 +212,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
                           isPasswordVisible
@@ -279,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                if (password.isNotEmpty) SizedBox(height: 8),
+                if (password.isNotEmpty) const SizedBox(height: 8),
                 if (password.isNotEmpty)
                   Text(
                     passwordStrength == PasswordStrength.none
@@ -300,7 +284,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
                     _signUpUser();
@@ -312,7 +296,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Colors.green.shade900,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Register',
                         style: TextStyle(
@@ -325,19 +309,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Already Have An Account?'),
+                    const Text('Already Have An Account?'),
                     TextButton(
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return LoginScreen();
+                          return const LoginScreen();
                         }));
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
                           Text('Login'),
                           Icon(Icons.login),
@@ -378,7 +362,7 @@ class __CountrySelectState extends State<_CountrySelect> {
   void _showCountryMenu(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -393,30 +377,31 @@ class __CountrySelectState extends State<_CountrySelect> {
       context: context,
       position: position,
       items: [
-        PopupMenuItem<String>(
-          value: 'Nigeria (+234)',
-          child: Text('Nigeria (+234)'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Kenya (+254)',
-          child: Text('Kenya (+254)'),
-        ),
-        PopupMenuItem<String>(
-          value: 'South Africa (+27)',
-          child: Text('South Africa (+27)'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Ghana (+233)',
-          child: Text('Ghana (+233)'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Egypt (+20)',
-          child: Text('Egypt (+20)'),
-        ),
-        PopupMenuItem<String>(
+        const PopupMenuItem<String>(
           value: 'Malawi (+265)',
           child: Text('Malawi (+265)'),
         ),
+        const PopupMenuItem<String>(
+          value: 'Nigeria (+234)',
+          child: Text('Nigeria (+234)'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'Kenya (+254)',
+          child: Text('Kenya (+254)'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'South Africa (+27)',
+          child: Text('South Africa (+27)'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'Ghana (+233)',
+          child: Text('Ghana (+233)'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'Egypt (+20)',
+          child: Text('Egypt (+20)'),
+        ),
+
         // Add more countries and codes here
       ],
     ).then<void>((String? value) {
@@ -435,7 +420,7 @@ class __CountrySelectState extends State<_CountrySelect> {
         _showCountryMenu(context);
       },
       child: InputDecorator(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Country Code',
           border: OutlineInputBorder(),
         ),
@@ -443,7 +428,7 @@ class __CountrySelectState extends State<_CountrySelect> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(_selectedCountry!),
-            Icon(Icons.keyboard_arrow_down),
+            const Icon(Icons.keyboard_arrow_down),
           ],
         ),
       ),
