@@ -69,7 +69,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
       if (user != null) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return MainScreen();
+          return const MainScreen();
         }));
       } else {
         // Handle authentication failure if needed.
@@ -104,16 +104,16 @@ class _BLoginScreanState extends State<BLoginScrean> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return RegisterScreen(); // Navigate to RegisterScreen
+                  return const RegisterScreen(); // Navigate to RegisterScreen
                 }));
               },
-              child: Text("Sign Up"),
+              child: const Text("Sign Up"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -148,14 +148,14 @@ class _BLoginScreanState extends State<BLoginScrean> {
                 "Login Customer's Account",
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 20), // Increased height here
+              const SizedBox(height: 20), // Increased height here
               Padding(
                 padding: const EdgeInsets.all(13.0),
                 child: TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Enter Email Address',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     errorText: _emailError,
                   ),
                 ),
@@ -167,7 +167,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Enter Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     errorText: _passwordError,
                   ),
                 ),
@@ -175,7 +175,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
               ElevatedButton(
                 onPressed: _isLoading ? null : _login,
                 style: ElevatedButton.styleFrom(
-                  primary: _isLoading
+                  backgroundColor: _isLoading
                       ? Colors.green.withOpacity(0.5)
                       : Colors.green, // Adjusted button color during loading
                   shape: RoundedRectangleBorder(
@@ -184,12 +184,12 @@ class _BLoginScreanState extends State<BLoginScrean> {
                   minimumSize: const Size(355, 50),
                 ),
                 child: _isLoading
-                    ? CircularProgressIndicator(
+                    ? const CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       )
                     : Text(
                         _isLoading ? 'Logging In...' : 'Login',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -201,7 +201,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     _firebaseError!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.red,
                     ),
                   ),
@@ -210,10 +210,10 @@ class _BLoginScreanState extends State<BLoginScrean> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return RegisterScreen(); // Navigate to RegisterScreen
+                    return const RegisterScreen(); // Navigate to RegisterScreen
                   }));
                 },
-                child: Text(
+                child: const Text(
                   "Don't have an account? Sign up",
                   style: TextStyle(
                     color: Colors.blue, // Customize the color
@@ -236,7 +236,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: BLoginScrean(),
   ));
 }

@@ -38,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Passwords do not match'),
             backgroundColor: Colors.red,
           ),
@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fullName = value;
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Full Name',
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -160,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Phone Number',
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -193,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         email = value;
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Email',
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -232,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.green,
                         ),
@@ -250,12 +250,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                       ),
                       suffix: passwordsMatch
-                          ? Icon(
+                          ? const Icon(
                               Icons.check,
                               color: Colors.green,
                             )
                           : confirmPassword.isNotEmpty
-                              ? Icon(
+                              ? const Icon(
                                   Icons.close,
                                   color: Colors.red,
                                 )
@@ -287,18 +287,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.green,
                         ),
                       ),
                       suffix: passwordsMatch
-                          ? Icon(
+                          ? const Icon(
                               Icons.check,
                               color: Colors.green,
                             )
                           : confirmPassword.isNotEmpty
-                              ? Icon(
+                              ? const Icon(
                                   Icons.close,
                                   color: Colors.red,
                                 )
@@ -435,12 +435,12 @@ class _CountrySelect extends StatefulWidget {
 }
 
 class __CountrySelectState extends State<_CountrySelect> {
-  String? _selectedCountry = 'Nigeria (+234)';
+  String? _selectedCountry = 'Malawi (+265)';
 
   void _showCountryMenu(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -497,7 +497,7 @@ class __CountrySelectState extends State<_CountrySelect> {
         _showCountryMenu(context);
       },
       child: InputDecorator(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Country Code',
           border: OutlineInputBorder(
             borderSide: BorderSide(
