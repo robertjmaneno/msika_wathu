@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your App Title'), // Set your app title here
+        title: const Text('Registering the User'), // Set your app title here
       ),
       body: SingleChildScrollView(
         child: Center(
