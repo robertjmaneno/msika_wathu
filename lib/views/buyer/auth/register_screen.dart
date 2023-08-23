@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:msika_wathu/controllers/auth_controller.dart';
 import 'package:msika_wathu/views/buyer/auth/loging_screan.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; // Import this for the File class
+import 'dart:ui';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key});
+  const RegisterScreen({super.key, Key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -16,7 +19,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String phoneNumber = '';
   late String password = '';
   late String confirmPassword = '';
-
+  XFile? globalImage; // Declare a global variable
+  XFile? globalImage1; // Declare a global variable
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
@@ -38,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Passwords do not match'),
             backgroundColor: Colors.red,
           ),
@@ -87,6 +91,92 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return PasswordStrength.weak;
   }
 
+  selectImage() async {
+    // Prompt the user to choose camera or gallery
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Select Image Source',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    final img = await _authController.imagePicker(
+                        context, ImageSource.camera);
+                    if (img != null) {
+                      setState(() {
+                        globalImage = img;
+                      });
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Camera',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    final img = await _authController.imagePicker(
+                        context, ImageSource.gallery);
+                    if (img != null) {
+                      setState(() {
+                        globalImage = img;
+                        globalImage1 = img;
+                      });
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Gallery',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,14 +190,104 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
-                CircleAvatar(
-                  radius: 64,
-                  backgroundColor: Colors.green.shade900,
-                  child: const Icon(
-                    Icons.person,
-                    size: 64,
-                    color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    // Handle the tap event here, for example, showing the image picker dialog.
+                    selectImage();
+                  },
+                  child: Container(
+                    width: 360, // Adjust the width as needed
+                    height: 200, // Adjust the height as needed
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade900,
+                      borderRadius:
+                          BorderRadius.circular(16.0), // Rounded corners
+                    ),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        globalImage != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    12.0), // Rounded corners for the image
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        12.0), // Inner rounded corners for the image
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        8.0), // Rounded corners for the image
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ), // Apply blur effect to the image
+                                      child: Image.file(
+                                        File(globalImage!.path),
+                                        width: double
+                                            .infinity, // Fills the width of the container
+                                        height: double
+                                            .infinity, // Fills the height of the container
+                                        fit: BoxFit
+                                            .cover, // Adjusts image within the container
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        // Add another container on top with blur effect
+                        Container(
+                          color: Colors.transparent, // Make it transparent
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Rounded corners for the blur container
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaX: 7.0,
+                                sigmaY: 7.0,
+                              ), // Apply blur effect to the container
+                              child: Container(
+                                color:
+                                    Colors.transparent, // Make it transparent
+                              ),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                            width:
+                                100.0, // Adjust the width of the CircleAvatar
+                            height:
+                                100.0, // Adjust the height of the CircleAvatar
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.green, // Green border color
+                                width: 4.0, // Border width
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: 48.0, // Adjust the radius as needed
+                              backgroundColor: Colors
+                                  .white, // Background color for CircleAvatar
+                              backgroundImage: globalImage != null
+                                  ? FileImage(File(globalImage!
+                                      .path)) // Use the same image for the circular avatar
+                                  : null, // You can add an image here if needed
+                              child: globalImage != null
+                                  ? null // You can remove this line if you want the circular avatar to show the same image
+                                  : Icon(
+                                      Icons.person,
+                                      size: 80,
+                                      color: Colors.green.shade900,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -123,7 +303,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fullName = value;
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Full Name',
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -160,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Phone Number',
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -193,7 +373,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         email = value;
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Email',
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -232,7 +412,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.green,
                         ),
@@ -250,12 +430,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                       ),
                       suffix: passwordsMatch
-                          ? Icon(
+                          ? const Icon(
                               Icons.check,
                               color: Colors.green,
                             )
                           : confirmPassword.isNotEmpty
-                              ? Icon(
+                              ? const Icon(
                                   Icons.close,
                                   color: Colors.red,
                                 )
@@ -287,18 +467,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.green,
                         ),
                       ),
                       suffix: passwordsMatch
-                          ? Icon(
+                          ? const Icon(
                               Icons.check,
                               color: Colors.green,
                             )
                           : confirmPassword.isNotEmpty
-                              ? Icon(
+                              ? const Icon(
                                   Icons.close,
                                   color: Colors.red,
                                 )
@@ -440,7 +620,7 @@ class __CountrySelectState extends State<_CountrySelect> {
   void _showCountryMenu(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -497,7 +677,7 @@ class __CountrySelectState extends State<_CountrySelect> {
         _showCountryMenu(context);
       },
       child: InputDecorator(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Country Code',
           border: OutlineInputBorder(
             borderSide: BorderSide(

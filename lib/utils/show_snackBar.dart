@@ -4,6 +4,6 @@ showSnack(context, String title) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
     title,
-    style: TextStyle(fontWeight: FontWeight.bold),
+    style: const TextStyle(fontWeight: FontWeight.bold),
   )));
 }
