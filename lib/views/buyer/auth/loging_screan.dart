@@ -69,7 +69,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
       if (user != null) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return MainScreen();
+          return const MainScreen();
         }));
       } else {
         // Handle authentication failure if needed.
@@ -103,8 +103,17 @@ class _BLoginScreanState extends State<BLoginScrean> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return RegisterScreen(); // Navigate to RegisterScreen
+                }));
               },
-              child: Text("OK"),
+              child: Text("Sign Up"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
             ),
             if (message
                 .contains('sign up')) // Check if the message contains 'sign up'
@@ -124,108 +133,107 @@ class _BLoginScreanState extends State<BLoginScrean> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login Customer Account'),
-          backgroundColor: Colors.green,
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 60),
-                const CircleAvatar(
-                  radius: 64,
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.person,
-                    size: 64,
-                    color: Colors.white,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login Customer Account'),
+        backgroundColor: Colors.green,
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 60), // Increased height here
+              const CircleAvatar(
+                radius: 64,
+                backgroundColor: Colors.green,
+                child: Icon(
+                  Icons.person,
+                  size: 64,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Login Customer's Account",
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 20), // Increased height here
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Email Address',
+                    border: OutlineInputBorder(),
+                    errorText: _emailError,
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Login Customer's Account",
-                  style: TextStyle(fontSize: 20),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Email Address',
-                      border: OutlineInputBorder(),
-                      errorText: _emailError,
-                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Password',
+                    border: OutlineInputBorder(),
+                    errorText: _passwordError,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Password',
-                      border: OutlineInputBorder(),
-                      errorText: _passwordError,
-                    ),
+              ),
+              ElevatedButton(
+                onPressed: _isLoading ? null : _login,
+                style: ElevatedButton.styleFrom(
+                  primary: _isLoading
+                      ? Colors.green.withOpacity(0.5)
+                      : Colors.green, // Adjusted button color during loading
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  minimumSize: const Size(355, 50),
                 ),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    primary: _isLoading
-                        ? Colors.green.withOpacity(0.5)
-                        : Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(355, 50),
-                  ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        )
-                      : Text(
-                          _isLoading ? 'Logging In...' : 'Login',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                child: _isLoading
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : Text(
+                        _isLoading ? 'Logging In...' : 'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                ),
-                if (_firebaseError != null)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      _firebaseError!,
-                      style: TextStyle(
-                        color: Colors.red,
                       ),
+              ),
+              if (_firebaseError != null)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    _firebaseError!,
+                    style: TextStyle(
+                      color: Colors.red,
                     ),
                   ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const RegisterScreen();
-                    }));
-                  },
-                  child: Text("Don't have an account? Sign Up"),
                 ),
-              ],
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RegisterScreen(); // Navigate to RegisterScreen
+                  }));
+                },
+                child: Text(
+                  "Don't have an account? Sign up",
+                  style: TextStyle(
+                    color: Colors.blue, // Customize the color
+                  ),
+                ),
+          )],
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   bool isValidEmail(String email) {
@@ -237,7 +245,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: BLoginScrean(),
   ));
 }

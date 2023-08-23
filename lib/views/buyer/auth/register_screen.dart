@@ -181,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your App Title'),
+        title: const Text('Your App Title'), // Set your app title here
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -615,7 +615,7 @@ class _CountrySelect extends StatefulWidget {
 }
 
 class __CountrySelectState extends State<_CountrySelect> {
-  String? _selectedCountry = 'Nigeria (+234)';
+  String? _selectedCountry = 'Malawi (+265)';
 
   void _showCountryMenu(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
