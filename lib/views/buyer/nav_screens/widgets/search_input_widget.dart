@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class SearchInputWidget extends StatelessWidget {
   const SearchInputWidget({
-    super.key,
-  });
+    Key? key, // Add the 'Key?' parameter
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +15,18 @@ class SearchInputWidget extends StatelessWidget {
           border: Border.all(color: Colors.white),
           borderRadius: BorderRadius.circular(13),
         ),
-        child: const Padding(
-          padding: EdgeInsets.only(left: 20.0),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
           child: TextField(
             decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Search',
-                hintStyle: TextStyle(fontFamily: 'Poppins'),
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: 25,
-                )),
+              border: InputBorder.none,
+              hintText: 'Search',
+              hintStyle: TextStyle(fontFamily: 'Poppins'),
+              prefixIcon: Icon(
+                Icons.search,
+                size: 25,
+              ),
+            ),
             cursorWidth: 2,
             cursorHeight: 28,
           ),

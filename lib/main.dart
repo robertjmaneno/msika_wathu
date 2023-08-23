@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:msika_wathu/firebase_options.dart';
-import 'package:msika_wathu/views/buyer/auth/register_screen.dart';
+import 'package:msika_wathu/views/buyer/auth/loging_screan.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +23,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const RegisterScreen());
+        home: const BLoginScrean());
   }
 }
