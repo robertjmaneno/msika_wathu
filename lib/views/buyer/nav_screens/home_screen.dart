@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 214, 211, 211),
+        backgroundColor: Color.fromARGB(255, 229, 227, 227),
         body: LayoutBuilder(
           builder: (context, constraints) {
             // Get the device screen width

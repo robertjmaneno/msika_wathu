@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:msika_wathu/controllers/auth_controller.dart';
-import 'package:msika_wathu/login.dart';
+import 'package:msika_wathu/views/buyer/auth/loging_screan.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -15,27 +15,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String fullName = '';
   late String phoneNumber = '';
   late String password = '';
+  late String confirmPassword = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
   PasswordStrength passwordStrength = PasswordStrength.none;
+  bool passwordsMatch = false;
 
   _signUpUser() async {
     if (_formKey.currentState!.validate()) {
-      String result = await _authController.signUpUsers(
-          email, fullName, phoneNumber, password);
+      if (password == confirmPassword) {
+        String result = await _authController.signUpUsers(
+            email, fullName, phoneNumber, password);
 
-      if (result == 'Success') {
-        // Registration successful, you can navigate to another screen or show a success message.
-        print('Registration successful');
-        // Navigate to another screen, e.g., home screen
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        if (result == 'Success') {
+          print('Registration successful');
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        } else {
+          print('Registration failed: $result');
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+        }
       } else {
-        // Registration failed, show the error message to the user.
-        print('Registration failed: $result');
-        // You can display the error message to the user, e.g., in a snackbar or dialog.
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Passwords do not match'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -58,31 +65,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     }
 
-    // Initialize the score to 0.
     int score = 0;
 
-    // Increment the score for each criteria met.
     if (hasUppercase) score++;
     if (hasLowercase) score++;
     if (hasSymbol) score++;
     if (hasNumber) score++;
 
-    // Passwords with less than 6 characters are considered weak.
     if (value.length < 6) {
       return PasswordStrength.weak;
     }
 
-    // Passwords with a score of 4 are considered strong.
     if (score >= 4) {
       return PasswordStrength.strong;
     }
 
-    // Passwords with a score between 2 and 3 are considered medium.
     if (score >= 2) {
       return PasswordStrength.medium;
     }
 
-    // Passwords with a score less than 2 are considered weak.
     return PasswordStrength.weak;
   }
 
@@ -90,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registering the User'), // Set your app title here
+        title: const Text('Your App Title'), // Set your app title here
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -118,11 +119,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.all(13.0),
                   child: TextFormField(
                     onChanged: (value) {
-                      fullName = value;
+                      setState(() {
+                        fullName = value;
+                      });
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Enter Full Name',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -148,12 +155,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         flex: 3,
                         child: TextFormField(
                           onChanged: (value) {
-                            phoneNumber = value;
+                            setState(() {
+                              phoneNumber = value;
+                            });
                           },
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Phone Number',
-                            border: OutlineInputBorder(),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.green,
+                              ),
+                            ),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -176,11 +189,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.all(13.0),
                   child: TextFormField(
                     onChanged: (value) {
-                      email = value;
+                      setState(() {
+                        email = value;
+                      });
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Enter Email',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -207,12 +226,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         } else {
                           passwordStrength = PasswordStrength.none;
                         }
+                        passwordsMatch = password == confirmPassword;
                       });
                     },
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Enter Password',
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           isPasswordVisible
@@ -225,6 +249,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
                         },
                       ),
+                      suffix: passwordsMatch
+                          ? Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            )
+                          : confirmPassword.isNotEmpty
+                              ? Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                )
+                              : null,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -237,6 +272,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     onSaved: (value) {
                       password = value!;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(13.0),
+                  child: TextFormField(
+                    onChanged: (value) {
+                      setState(() {
+                        confirmPassword = value;
+                        passwordsMatch = password == confirmPassword;
+                      });
+                    },
+                    obscureText: !isPasswordVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
+                      suffix: passwordsMatch
+                          ? Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            )
+                          : confirmPassword.isNotEmpty
+                              ? Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                )
+                              : null,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != password) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      confirmPassword = value!;
                     },
                   ),
                 ),
@@ -318,7 +396,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const LoginScreen();
+                          return const BLoginScrean();
                         }));
                       },
                       child: const Row(
@@ -362,7 +440,7 @@ class __CountrySelectState extends State<_CountrySelect> {
   void _showCountryMenu(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+        Overlay.of(context)!.context.findRenderObject() as RenderBox;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -401,7 +479,6 @@ class __CountrySelectState extends State<_CountrySelect> {
           value: 'Egypt (+20)',
           child: Text('Egypt (+20)'),
         ),
-
         // Add more countries and codes here
       ],
     ).then<void>((String? value) {
@@ -420,9 +497,13 @@ class __CountrySelectState extends State<_CountrySelect> {
         _showCountryMenu(context);
       },
       child: InputDecorator(
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           labelText: 'Country Code',
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.green,
+            ),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
