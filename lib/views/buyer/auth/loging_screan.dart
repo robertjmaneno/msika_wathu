@@ -3,15 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:msika_wathu/views/buyer/main_screen.dart';
 import 'package:msika_wathu/views/buyer/auth/register_screen.dart';
 
-class BLoginScrean extends StatefulWidget {
-  const BLoginScrean({Key? key}) : super(key: key);
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
+class BLoginScreen extends StatefulWidget {
+  const BLoginScreen({Key? key}) : super(key: key);
 
   @override
   _BLoginScreanState createState() => _BLoginScreanState();
 }
 
-class _BLoginScreanState extends State<BLoginScrean> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _BLoginScreanState extends State<BLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _emailError;
@@ -67,6 +68,7 @@ class _BLoginScreanState extends State<BLoginScrean> {
       final User? user = userCredential.user;
 
       if (user != null) {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
           return const MainScreen();
@@ -115,16 +117,16 @@ class _BLoginScreanState extends State<BLoginScrean> {
               },
               child: const Text("OK"),
             ),
-            if (message
-                .contains('sign up')) // Check if the message contains 'sign up'
-              TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const RegisterScreen();
-                  }));
-                },
-                child: Text("Sign Up"),
-              ),
+            // if (message
+            //     .contains('sign up')) // Check if the message contains 'sign up'
+            //   TextButton(
+            //     onPressed: () {
+            //       Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //         return const RegisterScreen();
+            //       }));
+            //     },
+            //     child: Text("Sign Up"),
+            //   ),
           ],
         );
       },
@@ -143,16 +145,6 @@ class _BLoginScreanState extends State<BLoginScrean> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 60), // Increased height here
-              const CircleAvatar(
-                radius: 64,
-                backgroundColor: Colors.green,
-                child: Icon(
-                  Icons.person,
-                  size: 64,
-                  color: Colors.white,
-                ),
-              ),
               const SizedBox(height: 20),
               const Text(
                 "Login Customer's Account",
@@ -246,6 +238,6 @@ class _BLoginScreanState extends State<BLoginScrean> {
 
 void main() {
   runApp(const MaterialApp(
-    home: BLoginScrean(),
+    home: BLoginScreen(),
   ));
 }

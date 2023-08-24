@@ -1,22 +1,34 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final FirebaseStorage _storage = FirebaseStorage.instance;
+
 class AuthController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future<String> uploadProfileImageToStorage(Uint8List? image) async {
+  Future<String> uploadProfileImageToStorage(XFile? globalImage) async {
     try {
-      Reference ref =
-          _storage.ref().child('profile').child(_auth.currentUser!.uid);
-      UploadTask uploadTask = ref.putData(image!);
+      if (globalImage == null) {
+        throw Exception('Image is null');
+      }
+
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('User is not logged in');
+      }
+
+      Reference ref = _storage.ref().child('profile').child(user.uid);
+
+      // Read the image file and convert it to bytes
+      Uint8List imageBytes = await globalImage.readAsBytes();
+
+      UploadTask uploadTask = ref.putData(imageBytes);
       TaskSnapshot snapshot = await uploadTask;
       String downloadUrl = await snapshot.ref.getDownloadURL();
 
@@ -59,15 +71,40 @@ class AuthController {
   }
 
   Future<String> signUpUsers(String email, String fullName, String phoneNumber,
-      String password) async {
+      String password, XFile? globalImage) async {
     try {
       if (email.isEmpty &&
           fullName.isEmpty &&
           phoneNumber.isEmpty &&
-          password.isEmpty) {
+          password.isEmpty ||
+          globalImage != null) {
         return 'Please fill in all the fields.';
       }
-      return 'Success';
+
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String profileImageUrl = await uploadProfileImageToStorage(globalImage);
+      User? user = userCredential.user;
+      if (user != null) {
+        // Store additional user information in Firestore
+        await _firestore.collection('buyers').doc(user.uid).set({
+          'fullName': fullName,
+          'phoneNumber': phoneNumber,
+          'email': email,
+          'userId': userCredential.user!.uid,
+          'address': '',
+          'profileImage': profileImageUrl,
+          // Add more user data fields as needed
+        });
+
+        return 'Success';
+      } else {
+        return 'Registration failed. Please try again later.';
+      }
     } catch (e) {
       if (e is FirebaseAuthException) {
         switch (e.code) {

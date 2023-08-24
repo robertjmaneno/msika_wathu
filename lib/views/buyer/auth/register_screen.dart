@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:msika_wathu/controllers/auth_controller.dart';
 import 'package:msika_wathu/views/buyer/auth/loging_screan.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io'; // Import this for the File class
+import 'dart:io';
 import 'dart:ui';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,27 +19,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String phoneNumber = '';
   late String password = '';
   late String confirmPassword = '';
-  XFile? globalImage; // Declare a global variable
-  XFile? globalImage1; // Declare a global variable
+  XFile? globalImage;
+  XFile? globalImage1;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
   PasswordStrength passwordStrength = PasswordStrength.none;
   bool passwordsMatch = false;
+  bool isLoading = false; // Track loading state
 
   _signUpUser() async {
     if (_formKey.currentState!.validate()) {
       if (password == confirmPassword) {
+        setState(() {
+          isLoading = true; // Set loading state to true
+        });
+
         String result = await _authController.signUpUsers(
-            email, fullName, phoneNumber, password);
+            email, fullName, phoneNumber, password, globalImage);
 
         if (result == 'Success') {
           print('Registration successful');
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BLoginScreen()));
         } else {
           print('Registration failed: $result');
           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
         }
+
+        setState(() {
+          isLoading = false; // Set loading state to false
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -92,7 +101,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   selectImage() async {
-    // Prompt the user to choose camera or gallery
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -192,92 +200,77 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Handle the tap event here, for example, showing the image picker dialog.
                     selectImage();
                   },
                   child: Container(
-                    width: 360, // Adjust the width as needed
-                    height: 200, // Adjust the height as needed
+                    width: 360,
+                    height: 200,
                     decoration: BoxDecoration(
                       color: Colors.green.shade900,
-                      borderRadius:
-                          BorderRadius.circular(16.0), // Rounded corners
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
                         globalImage != null
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    12.0), // Rounded corners for the image
+                                borderRadius: BorderRadius.circular(12.0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        12.0), // Inner rounded corners for the image
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        8.0), // Rounded corners for the image
+                                    borderRadius: BorderRadius.circular(8.0),
                                     child: BackdropFilter(
                                       filter: ImageFilter.blur(
                                         sigmaX: 5.0,
                                         sigmaY: 5.0,
-                                      ), // Apply blur effect to the image
+                                      ),
                                       child: Image.file(
                                         File(globalImage!.path),
-                                        width: double
-                                            .infinity, // Fills the width of the container
-                                        height: double
-                                            .infinity, // Fills the height of the container
-                                        fit: BoxFit
-                                            .cover, // Adjusts image within the container
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                 ),
                               )
                             : SizedBox.shrink(),
-                        // Add another container on top with blur effect
                         Container(
-                          color: Colors.transparent, // Make it transparent
+                          color: Colors.transparent,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Rounded corners for the blur container
+                            borderRadius: BorderRadius.circular(12.0),
                             child: BackdropFilter(
                               filter: ImageFilter.blur(
                                 sigmaX: 7.0,
                                 sigmaY: 7.0,
-                              ), // Apply blur effect to the container
+                              ),
                               child: Container(
-                                color:
-                                    Colors.transparent, // Make it transparent
+                                color: Colors.transparent,
                               ),
                             ),
                           ),
                         ),
                         Center(
                           child: Container(
-                            width:
-                                100.0, // Adjust the width of the CircleAvatar
-                            height:
-                                100.0, // Adjust the height of the CircleAvatar
+                            width: 100.0,
+                            height: 100.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.green, // Green border color
-                                width: 4.0, // Border width
+                                color: Colors.green,
+                                width: 4.0,
                               ),
                             ),
                             child: CircleAvatar(
-                              radius: 48.0, // Adjust the radius as needed
-                              backgroundColor: Colors
-                                  .white, // Background color for CircleAvatar
+                              radius: 48.0,
+                              backgroundColor: Colors.white,
                               backgroundImage: globalImage != null
-                                  ? FileImage(File(globalImage!
-                                      .path)) // Use the same image for the circular avatar
-                                  : null, // You can add an image here if needed
+                                  ? FileImage(File(globalImage!.path))
+                                  : null,
                               child: globalImage != null
-                                  ? null // You can remove this line if you want the circular avatar to show the same image
+                                  ? null
                                   : Icon(
                                       Icons.person,
                                       size: 80,
@@ -554,16 +547,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Colors.green.shade900,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                          color: Colors.white,
-                        ),
-                      ),
+                    child: Center(
+                      child: isLoading
+                          ? CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text(
+                              'Register',
+                              style: TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -576,7 +574,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const BLoginScrean();
+                          return const BLoginScreen();
                         }));
                       },
                       child: const Row(
@@ -659,7 +657,6 @@ class __CountrySelectState extends State<_CountrySelect> {
           value: 'Egypt (+20)',
           child: Text('Egypt (+20)'),
         ),
-        // Add more countries and codes here
       ],
     ).then<void>((String? value) {
       if (value != null) {
